@@ -28,7 +28,10 @@ file-that-we-want-to-ignore.txt
 
 # This would make the git ignore the .gitignore file and the file-that-we-want-to-ignore.txt from any git operations
 
+// Git log to show the log of all commits that has happened...
 
-
-
-
+git log
+git log --oneline
+git log --pretty=short
+git log --pretty=full
+git log --pretty=fuller
