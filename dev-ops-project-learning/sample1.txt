@@ -1,2 +1,34 @@
 Hello Git!
 Making changes v001
+
+git init --- for initialization
+
+git add .
+OR
+git add <<filename.txt>>
+
+git clone <<URL>> --branch <<branch-name>>
+
+git commit -m "your message"
+
+git push --set-upstream origin <<branch name>> // Only for the first time
+
+git push origin <<branch name>> // from the second time onwards
+
+=====================================================================================
+# Initialize ignorables
+touch .gitignore
+
+vi .gitignore
+
+.gitignore
+file-that-we-want-to-ignore.txt
+~
+~
+
+# This would make the git ignore the .gitignore file and the file-that-we-want-to-ignore.txt from any git operations
+
+
+
+
+
