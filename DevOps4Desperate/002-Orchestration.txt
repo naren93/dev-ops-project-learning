@@ -1,0 +1,87 @@
+Kubernetes or k8s -
+
+Open source orchestration tool used by many companies to manage containers.
+
+It means helmsman - steers boat in a ship.
+
+Networking and scheduling are the most complex issues we would encounter when orchestrating containers.
+
+Node affinity - Tune worker nodes for a specific use case, like high connectivity, create rules to ensure that the application that needs the feature ends up on that specific worker node.
+
+Rescriction of user authentication and authorization - Role based access control to run containers in a safe and controlled manner.
+
+Kubernetes Workload resource - object that encapsulates state and intent. They are defined in a file called manifest.
+
+Pod - basic building block of Kubernetes - made up of one or more containers that share the same network and storage. Each container can connect to another - all containers share a directory between them mounted by volume - Pods are not deployed directly, it is a higher level abstraction.
+
+ReplicaSet - Used to maintain a fixed no. of identical pods. If a pod is killed or deleted, the ReplicaSet will create another one to take its place. Intended for custom orchestration behaviour. 
+
+Deployment - manages the pods and ReplicaSet. Main job is to manintain the state configured in the manifest. Deployment resources controls a pods lifecycle. If Application needs to be long lived and fault tolerant a Deployment should be our first choice.
+
+StatefulSets - Managing stateful applications like PosgreSql, elasticSearch and etcd. Similar to deployment it can mange the state of the pod as defined in the manifest. In addition, it manages unique pod names, managing pod creation, managing termination.
+
+Services - Expose application running on pod or group of pods over to the internet. Choose the following basic service type -
+    ClusterIP - Default type when you create a service. You can access ClusterIP only within the Kubernetes cluster.
+    Headless - This does not create a single-service IP address.
+    NodePort - Exposes the Service on node's IP and port.
+    LoadBalancer - Exposes Service externally - with the help of AWS ELB or bare-metal LB solutions.
+    ExternalName - maps Service to the content of the ExternalName field to a CNAME record.
+Only a NodePort and LoadBalancer can expose a service outside the Kubernetes cluster.
+
+Volumes - A directory or a file that all containers in a pod can have access to with some caveats. Provide a way for containers to share and store data between them. If volume and its data is needed regardless of the Pod life-cycle use Persistant Volume.
+For Kubernetes cluster running in AWS we can use EBS as our storage PV units. This makes Pod catastrophes easier to survive.
+
+Secrets - To conveniently store sensitive information like API Keys, SSH keys and passwords - Via environment variables or as volume mount inside Pods. Encoded with base64 which is not a form of encryption. Keep your Secrets safe with the help of RBAC to restrict broad access to the API. Encrypt the Secrets manifest locally before adding them to version control.
+
+ConfigMaps - Allow us to mount non-sensitive configuration files into the container of a pod - container have this in their environment variable (or) command line arguments (or) file in volume mount - 2 benifits - 1. Update or deploy a new manifest file without having to re-deploy the whole application - if that application watches for changes in config-files, when updated, will be able to re-load without having to restart.
+
+NameSpace - Divide the Kubernetes cluster into several smaller virtual clusters - provides logical seperation of resources - not specifying the namespace will make it inherit the default namespace - many users and lot of projects can be split into seperate namespace - makes it easy to apply secure permission or other constraints to those resources.
+
+
+minikube status
+minikube stop
+minikube start 
+
+minikube kubectl cluster-info
+
+minikube kubectl -- explain deployment.metadata.labels
+
+For a manifest yml file -
+    apiVersion
+    kind
+    metadata
+    spec
+
+requests are used for scheduling and overall app health. Minimum resources your application needs.
+limits - contain the max number of cpu and memory 
+
+requests and limits are required for saving investigation time when things cant be scheduled or get killed. It will also save money since nodes are used more effeciently.
+
+minikube kubectl -- apply -f kubernetes/
+
+minikube kubectl -- get deployments.apps telnet-server
+
+minikube kubectl -- get pods -l app=telnet-server
+
+minikube kubectl -- get services -l app=telnet-server
+
+minikube tunnel
+
+minikube kubectl -- get services telnet-server
+
+telnet externalIP port
+
+minikube kubectl -- get endpoints -l app=telnet-server # Trouble shooting
+
+minikube kubectl -- get pods -l app=telnet-server
+
+minikube kubectl -- delete pod telnet-server-655c486c87-jvqv2
+
+minikube kubectl -- scale deployment telnet-server --replicas=3 # For scaling
+# we can also use the 'minikube apply' command
+
+minikube kubectl -- get deployments.apps telnet-server
+
+minikube kubectl -- logs telnet-server-655c486c87-mv5n9 # Logs
+
+minikube kubectl -- logs -l app=telnet-server --all-containers=true --prefix=true # All logs

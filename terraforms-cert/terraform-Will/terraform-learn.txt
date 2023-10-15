@@ -1,0 +1,43 @@
+Terraform language - ACL
+
+rammer-dev {
+    mail3.ramanathan@gmail.com = nNaren@123
+    641146427035
+    AKIAZKR2OC2NRMMTBXYG = DmWWP2Lk/WERGpF8WyiHZ9fNzjzjP35QQX7b3zMI
+}
+
+main.tf -> MAIN configuration file
+
+Create an EC2 instance in AWS.
+
+Using the resource - aws_instance - instance name - few mandatory prompt settings.
+
+terraform plan - Dry run of what will happen when we run the terraform code on cloud.
+
+terraform apply - create the infrastructure on cloud. Also, performs plan.
+
+terraform tfstate file - what created and what wasnt created log.
+
+terraform destroy - Get rid of that instance completely. We will be prompted for destroying.
+
+Without the name tag we will not be having the name of the instance in the UI.
+
+Variables in terraforms 
+
+Locals in terrforms 
+
+Outputs of modules
+
+Data sources - take data from existing cloud infra in AWS and build infra on that existing structure
+
+Resource-Meta-Arguments - to create one or more resources and mentioning additional dependencies -
+
+Expressions in terraform -
+    Types and values -
+        1. String
+        2. number
+        3. bool
+        4. list
+        5. map
+
+"${}" - string interpolation.

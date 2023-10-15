@@ -1,0 +1,31 @@
+ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory ../ansible/site.yml --check
+
+\r\nsign_and_send_pubkey: no mutual signature supported\r\nvagrant@127.0.0.1: Permission denied (publickey,password).", "unreachable": true}
+
+ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory ../ansible/site.yml --check -vvv
+
+TASK [Gathering Facts] ******************************************************************************************************************************************************
+task path: /media/rammer/v01/skulptor/project-portfolio/prepInterview/DevOps4Desperate/devops_for_the_desperate/ansible/site.yml:2
+<127.0.0.1> ESTABLISH SSH CONNECTION FOR USER: vagrant
+<127.0.0.1> SSH: EXEC ssh -C -o ControlMaster=auto -o ControlPersist=60s -o Port=2222 -o 'IdentityFile="/media/rammer/v01/skulptor/project-portfolio/prepInterview/DevOps4Desperate/devops_for_the_desperate/vagrant/.vagrant/machines/default/virtualbox/private_key"' -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no -o 'User="vagrant"' -o ConnectTimeout=10 -o ControlPath=/home/rammer/.ansible/cp/055b8f4af0 127.0.0.1 '/bin/sh -c '"'"'echo ~vagrant && sleep 0'"'"''
+<127.0.0.1> (255, b'', b'sign_and_send_pubkey: no mutual signature supported\r\nvagrant@127.0.0.1: Permission denied (publickey,password).\r\n')
+fatal: [default]: UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: sign_and_send_pubkey: no mutual signature supported\r\nvagrant@127.0.0.1: Permission denied (publickey,password).",
+    "unreachable": true
+}
+
+
+The authenticity of host '[127.0.0.1]:2222 ([127.0.0.1]:2222)' can't be established.
+ED25519 key fingerprint is SHA256:C2kgcBzKEngvO1F3hv1voFA8mJkxkQ3d7vhrFcOXBqs.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+<127.0.0.1> (255, b'', b"Warning: Permanently added '[127.0.0.1]:2222' (ED25519) to the list of known hosts.\r\nsign_and_send_pubkey: no mutual signature supported\r\nvagrant@127.0.0.1: Permission denied (publickey,password).\r\n")
+fatal: [default]: UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: Warning: Permanently added '[127.0.0.1]:2222' (ED25519) to the list of known hosts.\r\nsign_and_send_pubkey: no mutual signature supported\r\nvagrant@127.0.0.1: Permission denied (publickey,password).",
+    "unreachable": true
+}
+
+
+

@@ -1,0 +1,40 @@
+10-10-2022
+	Will Brock's terraform playlist - please follow along terraform-cert/terraform-Will - IN-PROGRESS
+	
+
+90 days of Devops -
+	Linux
+		<Sept 6, 2023> Linux environment is ready.
+	Go Lang
+	Cloud provider - AWS, Azure
+	GIT <Sept 6, 2023> Git is available and connected to my repo.
+	Docker - 1 book
+		<Sept 6, 2023> Installed docker for mysql container.
+	Kubernetes - 1 book
+	Terraforms - 1 book
+	Ansible - 1 book
+	Jenkins ArgoCD - 1 book
+	DataDog, Grafana, Prometheus
+	Data Recovery
+
+90 days of DE -
+	Hadoop and MR
+	Sqoop
+	Hive
+	Hbase
+	Spark, Spark optimization techniques, Spark Streaming
+	Kafka
+	Airflow DAG
+	Snowflake - 1 book
+
+90 days of SQL -
+	Daily SQL problems -
+		<Sept 6, 2023> Workbench setup completed.
+	1 book atleast
+
+90 days of algos -
+	Daily Python, Algos and DS problems (1 book atleast for each)
+		<Sept 6, 2023> Anaconda and Python are available in Linux laptop.
+
+
+

@@ -1,0 +1,6 @@
+- name: Set authorized key file from local user
+  authorized_key:
+    user: bender 
+    state: absent
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/dftd.pub') }}"
+

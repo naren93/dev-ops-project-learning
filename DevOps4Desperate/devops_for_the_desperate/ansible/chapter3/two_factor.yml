@@ -1,0 +1,42 @@
+- name: Install the libpam-google-authenticator package
+  apt:
+    name: "libpam-google-authenticator"
+    update_cache: yes
+    state: present
+
+- name: Copy over Preconfigured GoogleAuthenticator config
+  copy:
+    src: ../ansible/chapter3/google_authenticator
+    dest: /home/bender/.google_authenticator
+    owner: bender
+    group: bender
+    mode: '0600'
+
+- name: Disable password authentication for SSH
+  lineinfile:
+    dest: "/etc/pam.d/sshd"
+    regex: "@include common-auth"
+    line: "#@include common-auth"
+
+- name: Configure PAM to use GoogleAuthenticator for SSH logins
+  lineinfile:
+    dest: "/etc/pam.d/sshd"
+    line: "auth required pam_google_authenticator.so nullok"
+
+- name: Set ChallengeResponseAuthentication to Yes
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^ChallengeResponseAuthentication (yes|no)"
+    line: "ChallengeResponseAuthentication yes"
+    state: present
+
+- name: Set Authentication Methods for bender, vagrant, and ubuntu
+  blockinfile:
+    path: "/etc/ssh/sshd_config"
+    block: |
+      Match User "ubuntu,vagrant"
+          AuthenticationMethods publickey
+      Match User "bender,!vagrant,!ubuntu"
+          AuthenticationMethods publickey,keyboard-interactive
+    state: present
+  notify: "Restart SSH Server"
