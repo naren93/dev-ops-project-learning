@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location" : {
+            "type": "string",
+            "allowedValues" : ["eastus2, centralus"],
+            "defaultValue": "eastus2",
+            "metadata": {
+                "description": "We will have resources only on these locations."
+            }
+        },
+        "part" : {
+            "type": "string",
+            "minLength":4,
+            "maxLength":7,
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    // We are not going to be having any functions "functions": [],
+    "variables": {
+        "name" : "[concat(parameters('part'), 'res')]"
+    },
+    "resources": [
+        {
+            "name": "[concat('strac', variables('name'))]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-05-01",
+            "tags": {
+                "displayName": "[concat('strac', variables('name'))]"
+            },
+            "location": "[parameters('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            }
+        }
+    ],
+    "outputs": {}
+}

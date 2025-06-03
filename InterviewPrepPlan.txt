@@ -1,3 +1,12 @@
+5-Nov-2024
+* GIT -  From KodeKloud
+* Linux - Complete from DevOpsShack
+* Credit card bill - DONE
+* House RENT - DONE
+* Current Bill - ???
+* 
+==========
+
 10-10-2022
 	Will Brock's terraform playlist - please follow along terraform-cert/terraform-Will - IN-PROGRESS
 	
