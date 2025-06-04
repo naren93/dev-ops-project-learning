@@ -1,0 +1,12 @@
+ARM Template -
+
+$schema            |
+contentVersion     | Needed
+resources          |
+
+parameters (can be changed during runtime)  |
+variables (static and cannot be changed)    | Optional
+functions                                   |
+outputs                                     |
+
+* Functions can be used for generation of random names to name your resources according to a name

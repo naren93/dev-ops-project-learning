@@ -1,0 +1,39 @@
+========
+Services
+========
+------------
+Cluster IP -
+------------
+front-end - M1  M2  M3
+-------Service--------
+Back-end  - M4  M5  M6
+-------Service--------
+redis     - M7  M8  M9
+The above servers ranging from M1-M9 are all live-stock instances... Changing them can cause change on IP address so we need to use a service to interconnect these servers with one another and ensure there is no service disruption should there be a change in instances.
+
+-------------
+Load Balancer
+-------------
+kubectl get svc # or service
+kubectl describe svc kubernetes
+kubectl edit svc kubernetes
+kubectl get pods
+# endpoints - pods that the service identifies that is where the traffic is directed to. 
+kubectl create 0f service-definition.yml
+# check the endpoint if the site works as expected.
+
+------------
+Microservice
+------------
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voteing-app
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link db:db --link redis:redis worker
+# Network is not connected...
+
+
+k run yellow --image=busybox --dry-run=client -o yaml > yellow.yaml
+
+k replace --force -f /tmp/kubectl-edit-3242854598.yaml
+
