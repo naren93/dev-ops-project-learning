@@ -1,0 +1,34 @@
+ARM Template -
+
+$schema            |
+contentVersion     | Needed
+resources          |
+
+parameters (can be changed during runtime)  |
+variables (static and cannot be changed)    | Optional
+functions                                   |
+outputs                                     |
+
+* Functions can be used for generation of random names to name your resources according to a name
+
+VNet to VNet connection - VNet Peering
+Site to Site conection or express route - VNet to On-Site Peering
+VNet Connection in different Regions - Global VNet Peering
+VNet connection in the same region - Regional VNet Peering
+    * High speed data transfer
+    * Uses Microsoft's backbone network and not internet lines offering privacy and low latency 
+    * Easy configuration and great performance
+    * Facilitates connectivity
+
+Types of peering -
+    * Global vnet peering
+    * Regional vnet peering
+
+VPN Gateway - 
+VPN gateway to establish connection between london office to new york office.
+Multiple SKU available.
+Steps to create VPN Gateway - 
+    * Create a gateway subnet in both VNets
+    * Create VPN Gateway in both virtual networks
+    * Create the VPN Connection
+
