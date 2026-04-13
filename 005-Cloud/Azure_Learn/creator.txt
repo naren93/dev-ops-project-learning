@@ -1,0 +1,31 @@
+Cloud - Azure
+CI/CD - Jenkins, Azure Devops
+IAAC - Azure bicep, terraform
+Container - Docker, Kubernetes
+Monitoring - Grafana, Prometheus
+
+1. Create a service principal to use for automation.
+    This can be done by creating a new App Registrations
+    Tenant ID - 47bb4e16-f695-425b-830a-837b5d5556fa
+    Client ID - fa9c363c-7254-41eb-bde2-262e71472103
+    Sec Value - Pi08Q~cgl5-umQILvjrCAfnl_bwMPzTwH28cAbwN
+    Sec id    - d97ce5cd-9cf1-4e4b-8a82-2433af7f4489
+
+az login --service-principal --username "d97ce5cd-9cf1-4e4b-8a82-2433af7f4489" \
+         --password "Pi08Q~cgl5-umQILvjrCAfnl_bwMPzTwH28cAbwN" \
+         --tenant "47bb4e16-f695-425b-830a-837b5d5556fa"
+
+2. Create the following infra using azure bicep - Use Jenkins as CI/CD Pipeline
+    a. Create a web server httpd and nginx ensure that both (80 and 443) ports are open
+    b. in the above web server ensure that you are able to write an angular app (front-end only application - anything from github)
+    c. do the above on a container (app service plan container)
+    d. host a web, api and db on azure - ensure that they are connected where they need to be and the app must be working as expected. This microservice app should be a .net app
+    e. do the same for a java app
+
+3. Create the above created infra using terraform - use jenkins as CI/CD pipeline
+
+4. Do the above with GitHub Workflow or Gitlab CICD or Azure Devops
+
+5. Ansible project
+
+6. 

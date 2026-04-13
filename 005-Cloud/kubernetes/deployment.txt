@@ -1,0 +1,9 @@
+# Create a deployment and expose a port on the server -
+k create deployment ngnix-server --image=ngnix:alpine --port=80
+k expose deployment nginx-server --name=nginx-service --type=NodePort --targetPort=80 --port=8080 
+minikube service nginx-service
+
+# List all api-resources in your kubernetes cluster and put them inside api-resources.csv file -
+kubectl api-resources
+
+# List services associated with kubernetes in your os and save them to services.csv

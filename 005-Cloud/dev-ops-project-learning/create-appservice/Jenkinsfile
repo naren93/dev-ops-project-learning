@@ -1,0 +1,88 @@
+// Jenkinsfile
+pipeline {
+    agent {
+        // Use a specific Jenkins agent label that has Docker, or is suitable for installing tools.
+        // For a production setup, you'd typically use a Docker agent with Azure CLI and PowerShell Core pre-installed.
+        // For this example, assuming a generic Linux agent that we will install tools on.
+        label 'linux-agent' // <<< REPLACE with your actual Jenkins agent label if not 'linux-agent'
+    }
+
+    environment {
+        // Define common environment variables for your deployment
+        RESOURCE_GROUP_NAME = 'my-app-service-rg' // <<< REPLACE with your desired Azure Resource Group name
+        AZURE_REGION = 'eastus' // <<< REPLACE with your desired Azure region (e.g., 'centralus', 'westus2')
+        APP_SERVICE_PLAN_NAME = 'my-b1-linux-plan' // Corresponds to the 'appServicePlanName' param in Bicep
+        BICEP_TEMPLATE_FILE = 'webapp-svcplan.bicep' // Name of your Bicep template file
+        POWERSHELL_SCRIPT = 'invoke-infra.ps1' // Name of your PowerShell script
+
+        // Define credentials IDs for your Azure Service Principal
+        // These MUST be 'Secret Text' credentials configured in Jenkins (Manage Jenkins -> Credentials)
+        // Ensure you create credentials with these IDs in Jenkins:
+        // - AZURE_CLIENT_ID
+        // - AZURE_CLIENT_SECRET
+        // - AZURE_TENANT_ID
+        // - AZURE_SUBSCRIPTION_ID
+        AZURE_CLIENT_ID_CRED_ID = 'azure-sp-client-id' // <<< REPLACE with your Jenkins credential ID
+        AZURE_CLIENT_SECRET_CRED_ID = 'azure-sp-client-secret' // <<< REPLACE with your Jenkins credential ID
+        AZURE_TENANT_ID_CRED_ID = 'azure-sp-tenant-id' // <<< REPLACE with your Jenkins credential ID
+        AZURE_SUBSCRIPTION_ID_CRED_ID = 'azure-sp-subscription-id' // <<< REPLACE with your Jenkins credential ID
+    }
+
+    stages {
+        stage('Checkout Source') {
+            steps {
+                // Checkout the repository containing your Bicep file and PowerShell script
+                // Replace 'your-git-repo-url' and 'your-git-credentials-id'
+                git branch: 'main', credentialsId: 'your-git-credentials-id', url: 'your-git-repo-url'
+            }
+        }
+
+        stage('Install Azure CLI and PowerShell Core') {
+            // This stage installs necessary tools on a generic Linux agent.
+            // In a more production-ready setup, your Jenkins agent's Docker image
+            // would have these tools pre-installed to speed up pipelines.
+            steps {
+                sh '''
+                    echo "Installing Azure CLI..."
+                    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+                    echo "Installing PowerShell Core..."
+                    # Add Microsoft apt repository for PowerShell
+                    wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb
+                    sudo dpkg -i packages-microsoft-prod.deb
+                    rm packages-microsoft-prod.deb
+                    sudo apt update
+                    sudo apt install -y powershell
+                '''
+            }
+        }
+
+        stage('Deploy App Service Plan') {
+            steps {
+                // Use withCredentials to inject sensitive Service Principal details as environment variables
+                withCredentials([
+                    string(credentialsId: env.AZURE_CLIENT_ID_CRED_ID, variable: 'AZURE_CLIENT_ID'),
+                    string(credentialsId: env.AZURE_CLIENT_SECRET_CRED_ID, variable: 'AZURE_CLIENT_SECRET'),
+                    string(credentialsId: env.AZURE_TENANT_ID_CRED_ID, variable: 'AZURE_TENANT_ID'),
+                    string(credentialsId: env.AZURE_SUBSCRIPTION_ID_CRED_ID, variable: 'AZURE_SUBSCRIPTION_ID')
+                ]) {
+                    sh """
+                        echo "Making PowerShell script executable..."
+                        chmod +x ./${POWERSHELL_SCRIPT}
+
+                        echo "Running PowerShell deployment script..."
+                        # Call the PowerShell script with parameters, passing environment variables
+                        pwsh -File ./${POWERSHELL_SCRIPT} \\
+                            -ResourceGroupName '${RESOURCE_GROUP_NAME}' \\
+                            -Location '${AZURE_REGION}' \\
+                            -TemplateFile '${BICEP_TEMPLATE_FILE}' \\
+                            -SubscriptionId '${AZURE_SUBSCRIPTION_ID}' \\
+                            -ClientId '${AZURE_CLIENT_ID}' \\
+                            -ClientSecret '${AZURE_CLIENT_SECRET}' \\
+                            -TenantId '${AZURE_TENANT_ID}'
+                    """
+                }
+            }
+        }
+    }
+}

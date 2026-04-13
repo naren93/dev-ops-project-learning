@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+dist/
+tmp/
+out/
+build/
+
+# IDEs and System
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.log
+
+# Angular specific
+.angular/
+performance-report.md
+InterviewPrepPlan.txt

@@ -1,0 +1,18 @@
+# Service definition of ClusterIP
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: ClusterIP
+  selector:
+    app: myapp
+    type: back-end
+  ports:
+  - port: 80
+    targetPort: 80
+
+
+# kubectl create -f service-definition.yml
+# kubectl get services

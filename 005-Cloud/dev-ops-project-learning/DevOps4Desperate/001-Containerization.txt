@@ -1,0 +1,59 @@
+Container
+
+Docker | Docker Daemon
+
+Containerization
+
+DockerFile
+	FROM
+	COPY
+	RUN
+	ADD
+	ENTRYPOINT
+	CMD
+
+Container Image(s)
+
+Layers (UFS - Union File system)
+
+NameSpaces
+	Common kernal namespaces include -
+		PID
+		Network
+		UTS (Hostname and Domain Name)
+		Mount (mnt mount point)
+		IPC (Isolates the sys-V style interprocess communication)
+		User (Isolates the user id and group id)
+
+Cgroups - To decide upon the Memory, CPU, Disk I/O and Network of the container that is created.
+
+MiniKube Installation -
+	curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+	sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+
+minikube start --driver=virtualbox
+eval $(minikube -p minikube docker-env)
+docker version
+docker build -t dftd/telnet-server:v1 .
+docker image ls dftd/telnet-server:v1
+docker run -p 2323:2323 -d --name telnet-server dftd/telnet-server:v1
+docker container ls -f name=telnet-server
+docker container stop telnet-server
+
+exec command -
+docker exec telnet-server env
+docker exec -it telnet-server /bin/bash
+
+rm command -
+docker container rm telnet-server
+
+docker inspect telnet-server
+docker history dftd/telnet-server:v1
+
+minikube ip
+telnet 192.168.99.103 2323 d q
+
+
+
+docker logs telnet-server

@@ -1,0 +1,20 @@
+# This is how a service definition is configured for Kubernetes
+# This service also acts as a load balancer if there are cluster of pods for the same app
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30004
+
+# kubectl create -f service-definition.yml
+# kubectl get svc
+# minikube service myapp-service --url
+

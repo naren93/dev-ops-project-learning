@@ -1,0 +1,21 @@
+Developers from Hiroku came up with these 12 factors to keep in mind when building an app -
+1. Codabase
+  Have a single code base for your application. Git helps all devs on the same product at the same time on a central hub. [Github, Gitlab, BitBucket] MULTIPLE APPS SHARING THE SAME CODE IS WRONG.
+2. Dependencies
+  Explicitly declare and isolate the dependency. Ex. package.json, requirements.txt. Create isolated environment for each app with its own dependencies. Ex. Virtual python environment venv, docker containers.
+3. Configuration
+  .env file that automatically fetches env variables as per dev, test, stage, prod environments. Thus saving info from public eyes.
+4. Backing Services
+  You should point your app to another instance and it should just work.
+5. Build, release, run
+  Roll back the previous commit - 
+6. Processes
+  Updating one process that is running - but if multiple process is running then we might get wrong user session information - dont store anything in process but in the backend service - it does not matter which process it points to - thus point the user session to a redis db to ensure process is not corrupted or intrupted.
+7. Port Bindings
+8. Concurrency
+  What happens when we have more users visiting our sites? Horizontal scaling and load balancing - create app as independent stateless app.
+9. Disposibility
+10. Dev/Prod Parity
+11. Logs
+12. Admin Processes
+

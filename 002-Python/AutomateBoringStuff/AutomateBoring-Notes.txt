@@ -1,0 +1,104 @@
+
+# Python Operators in Order of Operation -
+# The first - last in the order of precedence.
+
+** Exponent
+* Multiply
+// Integer division (or) floored quotient
+% Modulo / Reminder
+- Subtract
++ Add
+
+# SyntaxError - Something is missing according to Python language
+
+# Common data types -
+	# Integers - Whole numbers that can be of both signs
+	# Floating-point - xx.xx
+	# String - "This is a string."
+
+Converting the data types -
+str(), int() float()
+
+# Try multiplying strings like -
+'Alice ' * 5
+
+# Storing values in a variable -
+# Assignment operator - '='
+spam = 40
+eggs = 20
+spam + eggs
+spam = 'Hello'
+
+# Naming convention for variables in Python -
+Valid = balance, current_balance, currentBalance, _spam, SPAM, account4
+Not Valid = current-balance, current balance, 4account, 42, total_$num, 'hello'
+
+# Boolean Values in Python -
+True, False
+# Boolean Operators -
+and, or, not
+
+# Conditionals -
+If, if-else, if-elif-else, for, while, do-while.
+
+# Functions
+They are the primary ways to compartmentalize your code into logical groups. Since the variables in functions exists in local scope, the code in one function cannot directly affect the values of code in another function.
+
+# Lists and Tuples
+Concat -> listname = listname + [var00]
+Change valies -> listname[x] = 'delta'
+Slices -> listname[:], listname[1:4], listname[0:4], listname[:2]
+list of lists -> listname[0][1]
+removing items from list -> del listname[1] OR 
+'string' in listname
+'string' not in listname
+Multiple Assignment -> a,b,c = listname
+Augmented Assignment Operators - 
+	spam += 1
+	spam -= 1
+	spam *= 1
+	spam /= 1
+	spam %= 1
+Lists -
+	spam = ['hello', 'howdy', 'hi', 'heya']
+	spam.index('hello')
+	spam.append('greetings')
+	spam.insert(2, 'hola')
+	spam.remove('hi')
+	del spam[2] # Please verify the syntax for this.
+	ham = [1,2,3,4,5,6,7]
+	ham.sort()
+	ham = [a,b,A,b]
+	ham.sort()
+	ham = [1,2,3,4,'Alice', 'Bob']
+	ham.sort() # Will give you an error.
+
+Example program magic 8 ball 
+
+# List-like type (strings and Tuples)
+Practice project - Convert list into strings 
+
+# Dictionary -
+
+a=dict()  #Empty dict
+
+b = {
+	'foo':42
+} # Dict with key word foo and value 42
+
+Dictionary has key and value pairs. Wheras lists are indexed.
+
+Dictionary key error in python when the key does not exists.
+
+spam.setdefault('color', 'black') # Set Default
+'cat' in spam || 'cat' in spam.keys() || 'cat' in spam.values()
+
+pprint.pprint(???)
+
+# Escape sequence in Python string -
+\' Single quote
+\" Double quote
+\t Tab
+\n Newline (line break)
+\\ Backslash
+

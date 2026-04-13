@@ -1,0 +1,476 @@
+## - EXAM EXERCISES 
+
+#1) Perform the command to list all api resources in Kubernetes cluster and save output in resources.csv
+kubectl api-resource > resources.csv
+
+#2) List services on your Linux operating system that are associated with Kubernetes. Save the output to a file named services.csv
+systemctl list-units --type=service | grep -i 'kube' > services.csv
+
+#3) List the status of the kubelet service running on the Kubernetes node output the result to kubelet-status.txt and save the file in temp directory
+ps aux | grep kubelet > /tmp/kubelet-status.txt # on all nodes
+service kubelet status > /tmp/kubelet-status.txt # on all nodes
+systemctl kubelet status > /tmp/kubelet-status.txt # on all nodes
+
+#4) Use declarative syntax to create a pod from yaml file in Kubernetes. Save the yaml file as chap1-pod.yaml. Use the kubectl create command to create the pod
+kubectl run nginx --image=nginx:alpine --port=80 --dry-run=client -o yaml > chap1-pod.yaml
+kubectl create -f chap1-pod.yaml
+
+#5) Using the kubectl cli tools list all the services created in your Kubernetes cluster across all namespaces. Save the command to a file named all-k8s-services.txt
+kubectl get svc -A -o wide > all-k8s-services.txt
+
+###- ETCDTL - 
+etcdctl -v
+
+etcdctl save snapshotdb --cacert /etc/kubernetes/pki/etcd/ca/crt --cert /etc/Kubernetes/pki/etcd/server.crt --key /etc/Kubernetes/pki/etcd/key.crt
+
+export ETCDCTL_API=3
+etcdctl --endpoints=127.0.0.1:2379 --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --cacert=/etc/kubernetes/pki/etcd/ca.crt snapshot save /opt/snapshot-pre-boot.db
+
+etcdctl status snapshot --write-out=table
+
+etcdctl --write-out=table snapshot status /opt/snapshot-pre-boot.db
+
+kubectl delete ds kube-proxy -n kube-system
+
+kubectl get ds -A
+
+etcdctl --data-dir /var/lib/etcd-from-backup snapshot restore /opt/snapshot-pre-boot.db
+
+vi /etc/kubernetes/manifests/etcd.yaml
+
+kubectl get ds -A
+
+#) Increase your efficiency with running kubectl commands by shortening kubectl to k creating a shell alias - 
+alias k='kubectl'
+# try adding that in the zsh or source or bashrc or whatever that source file is and reset the shell
+
+#) Using kubectl tool, get the ouput of pods running in kube-system namespace and show the pod ip addr. Save the output of the command to a file named pod-ip-output.txt
+k get pods -n kube-system -o wide > pod-ip-output.txt
+
+#) Use the cli tool which allows you to view the client certificate that the kubelet uses to authenticate to Kubernetes api. output the results to a file named kubelet-config.txt
+kubectl get csr -o yaml > kubelet-config.txt
+
+#) Using the etcdctl cli tool backup the etcd data store to a snapshot file named etcdbackup1. Once the backup is complete send the output of the command etcdctl snapshot status etcdbackup1 to a file named snapshot-status.txt
+export ETCDCTL_API=3
+etcdctl snapshot save --endpoint=127.0.0.1:2379 --cert=/etc/Kubernetes/pki/etcd/server.crt --key=/etc/Kubernetes/pki/etcd/server.key --ca=/etc/Kubernetes/pki/etcd/ca.crt etcdbackup1.db
+etcdctl snapshot status etcdbackup1.db --write-out=table > snapshot-status.txt
+
+#) Using the etcdctl CLI tool, restore the etcd datastore using the same etcdbackup1 file from the previous exercise. When you complete the restore operation, cat the etcd YAML and save it to a file named etcd-restore.yaml.
+etcdctl snapshot restore --data-dir=/var/lib/etcd-from-backup etcdbackup1.db
+vi /etc/Kubernetes/manifests/etcd.yaml
+
+#) Upgrade the control plane components using kubeadm when complete check everything including kubelet and kubectl is upgraded to the latest version.
+* How many nodes do you have to upgrade = 2 (control plane and worker node)
+* Make a note of current version of kube
+kubeadm version
+kubectl version
+kubelet --version
+cat /etc/apt/sources.list.d/kubernetes.list
+vi /etc/apt/sources.list.d/kubernetes.list
+
+* Drain control-plane node of workloads and make it unschedulable -
+kubectl drain controlplane --ignore-daemonsets
+
+* Upgrade the control plane node -
+
+sudo apt update
+sudo apt-cache madison kubeadm
+
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.32.0-*' && \
+sudo apt-mark hold kubeadm
+
+sudo kubeadm upgrade plan
+kubeadm upgrade apply v1.32.0
+
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.32.0-*' kubectl='1.32.0-*' && \
+sudo apt-mark hold kubelet kubectl
+
+systemctl daemon-reload
+systemctl restart kubelet
+
+kubectl uncordon controlplane
+
+kubectl drain node01 --ignore-daemonsets
+
+* IN THE WORKER NODE(S)
+kubectl version
+kubeadm version
+vi /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt update
+sudo apt-cache madison kubeadm
+
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.32.0-*' && \
+sudo apt-mark hold kubeadm
+
+kubeadm upgrade node
+
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.32.0-*' kubectl='1.32.0-*' && \
+sudo apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+kubectl uncordon node01
+kubectl get nodes -o wide # for verification purposes
+
+#) Create a role named sa-creators that will allow for the creating of service accounts. Create a role-binding that is associated with the previously created role that will bind the user Sandra
+
+kubectl create role sa-creators --verb=create --resource=sa
+kubectl create rolebinding sa-creator-binding --role=sa-creators --user=Sandra
+
+#) Create a new user named Sandra by first creating the private key, then the certificate-signing request, and then using the CSR resource in Kubernetes to generate the client certificate. Add Sandra to your local kubeconfig using the kubectl config command.
+
+openssl genrsa -out sandra.key 2048
+openssl req -new -key sandra.key -out sandra.csr -subj "/CN=sandra/O=dev-team"
+cat sandra.csr | base64 | tr -d '\n'
+kubectl create csr sandra-csr --cert-request="BASE64_ENCODED_CSR_HERE" --signer-name=Kubernetes.io/kube-apiserver-client --dry-run=client -o yaml > sandra-csr.yaml
+kubectl apply -f sandra-csr.yaml
+kubectl certificate approve sandra-csr
+kubectl get csr sandra-csr -o jsonpath='{.status.certificate}' | base64 --decode > sandra.crt
+kubectl config set-credentials sandra --client-certificate=sandra.crt --client-key=sandra.key --embed-certs=true
+kubectl config set-context sandra-context --cluster=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}') --user=sandra
+kubectl config use-context sandra-context
+kubectl create rolebinding sandra-rb --clusterrole=view --user=sandra --namespace=dev
+
+#) Create a new Service Account named secure-sa, and create a Pod that uses this Service Account. Make sure the token is not exposed to the Pod.
+
+kubectl create sa secure-sa
+kubectl create pod secure-pod --image=nginx --serviceaccount=secure-sa --automount-service-account=false
+
+#) Create a new cluster Role named acme-corp-role that will allow the create action on Deployments, replicates, and DaemonSets. Bind that cluster Role to the Service Account secure-sa and make sure the Service Account can only create the assigned resources within the default namespace and nowhere else. Use auth can-i to verify that the secure-sa Service Account cannot create Deployments in the kube-system namespace, and output the result of the command plus the command itself to a file and share that file.
+
+kubectl create clusterrole acme-corp-role --resource=deployment,replicationsetsdaemonsets --verb=create
+kubectl create clusterrolebinding --serviceaccount=secure-sa --namespace=default --clusterrole=acme-corp-role acme-corp-rolebinding
+
+echo "kubectl auth can-i create deployment --namespace=kube-system --as system:serviceaccount:default:secure-sa $(kubectl auth can-i create deployment --namespace=kube-system --as system:serviceaccount:default:secure-sa)" > test.txt
+
+#) Apply the label disk=ssd to a node. Create a Pod named fast using the nginx image and make sure that it selects a node based on the label disk=ssd.
+
+kubectl label node node01 disk=ssd
+kubectl run fast --image=nginx --nodeselector=disk=ssd
+
+#) Edit the fast Pod using k edit po fast and change the node selector to disk=slow. Notice that the Pod cannot be changed and the YAML was saved to a temporary location. Take the YAML in /tmp/ and apply it by force to delete and recreate the Pod using a single imperative command.
+
+# edit the node selector in a separate yaml file ssdslow.yaml
+kubectl delete pod fast --force --grace-period=0
+kubectl apply -f ssdslow.yaml
+
+#) Create a new Pod named ssd-pod using the nginx image, and use node affinity to select nodes based on a weight of 1 to nodes that have a label disk=ssd. If the selection criteria don’t match, it can also choose nodes that have the label kubernetes .io/os=linux.
+
+k run ssd-pod --image=nginx --dry-run=client -o yaml > ssd-pod.yaml
+vi ssd-pod.yaml
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key:
+          operators: In
+          values: 
+          - ssd
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: Kubernetes.io/os
+          operators: In
+          values: 
+          - linux
+kubectl apply -f ssd-pod.yaml
+
+#) Create a Deployment named apache that uses the image httpd:2.4.54 and contains three Pod replicas. After the Deployment has been created, scale the Deployment to five replicas and change the image to httpd:alpine.
+
+kubectl create deploy --image=httpd:2.4.54 --replicas=3 apache
+kubectl scale --current-replicas=3 --replicas=5 deploy apache
+kubectl set image deploy apache httpd=httpd:alpine
+kubectl rollout status deploy/apache
+
+#) “Using kubectl, create a Deployment named apache using the image httpd:latest with one replica. After the Deployment is running, scale the replicas up to five.”
+
+kubectl create deploy apache --image=httpd:latest --replicas=1 --dry-run=client -o yaml > apache-deploy.yaml
+kubectl apply -f apache-deploy.yaml
+kubectl scale deploy apache --replicas=5
+
+#) “Update the image for the Deployment apache from httpd:latest to httpd:2.4.54. Do not create a new YAML file or edit the existing resource (only use kubectl)”
+
+k set image deploy apache httpd=httpd:2.4.54
+
+#) “Using kubectl, view the events of the ReplicaSet that was created as a result of the image change from the previous exercise.
+
+kubectl rollout status deploy apache
+
+#) Using kubectl, roll back to the previous version of the Deployment named apache.
+
+kubectl rollout undo deploy apache
+
+#) For the existing Deployment named apache, change the rollout strategy for a Deployment to Recreate.”
+
+vi apache-deploy.yaml # change the strategy to type: Recreate and ...
+k apply -f apache-deploy.yaml
+
+#) “From a three-node cluster, cordon one of the worker nodes. Schedule a Pod without a nodeSelector. Uncordon the worker node and edit the Pod, applying a new node name to the YAML (set it to the node that was just uncordoned). After replacing the YAML, see if the Pod is scheduled to the recently uncordoned node.
+
+kubectl cordon node02 # or k drain node02 --ignore-daemonsets
+k run pod01 --image=httpd:alpine --dry-run=client -o yaml > trial.yaml
+k apply -f trial.yaml
+k uncordon node02
+# edit and add nodeSelector to the pod
+# check if the pod is running in the uncordoned node after apply
+
+#) Start a basic nginx Deployment; remove the taint from the control plane node so that Pods don’t need a toleration to be scheduled to it. Add a nodeSelector to the Pod spec within the Deployment, and see if the Pod is now running on the control plane node.”
+
+k create deploy nginx --image=nginx --replicas=1 --dry-run=client -o yaml > trial-deploy.yaml
+k apply -f trail-deploy.yaml
+k taint nodes control-plane node.kubernetes.io/unschedulable-
+# edit the pod spec and add nodeSelector to run on the control plane node and do a kubectl apply -f file.yaml
+
+#) “exec into a Pod and cat out the DNS resolver file to see the IP address of the DNS server that the Pod uses to resolve domain names.”
+
+Kubectl run pod0 --image=nginx
+Kubectl exec -it pod0 -- /bin/sh
+Cat /etc/resolv.conf
+Exit
+
+#) “Open the file that contains the configuration for the kubelet and change the value for clusterDNS to 100.96.0.10. Save and quit the file.”
+
+# The change has to be made in the kube-apiserver
+vi /etc/kubernetes/manifests/kube-apiserver.yaml
+# wait for 2-3 mins
+kubectl get pods -A
+# now we have checked what the pod resolves to and changed the cider ip range for kube-apiserver
+
+#) “Stop and reload the kubelet daemon. Verify that the Service is active and running.”
+
+kubectl get all -A
+systemctl restart kubelet && systemctl daemon-reload
+
+#) “Locate the kube-dns Service. Try to edit the Service in place by changing the value of both clusterIP and ClusterIPs to 100.96.0.10. When the values cannot be updated, force a replacement of the Service with the correct kubectl command-line argument.”
+
+k -n kube-system get all # to get the kube-dns svc
+k edit svc -n kube-system kube-dns # with the correct cluster IP(s)
+# this editing will add a file for you in the /tmp directory in the form of a yaml file
+k replace -f /tmp/kubectl-edit-abcedfghij.yaml --force
+k -n kube-system describe svc kube-dns
+
+#) “Edit the ConfigMap that contains the kubelet configuration. Change the IP address value that is set for clusterDNS to 100.96.0.10. Make sure to edit the resource without writing a new YAML file.
+
+vi /var/lib/kubelet/config.yaml # change the ip addr
+k edit configmap -n kube-system kubelet-config # give the ip cidr range
+kubeadm upgrade node phase kubelet-config
+systemctl restart kubelet && systemctl daemon-reload
+
+#) Scale the CoreDNS Deployment to three replicas. Verify that the Pods have been created as a part of that Deployment.
+
+k scale deploy coredns -n kube-system --replicas=3
+
+#) Test access from a Pod to a Service by first creating a Deployment with the apache image, followed by exposing that Deployment. Create a Pod from the netshoot image, and verify that you can reach the Service that you just created.”
+
+k create deploy testingdns --image=httpd:alpine
+k expose deploy testingdns --port=80 --target-port=8000
+k run netshoot --image=nicolaka/netshoot --command "sleep" --command "3600"
+k exec -it netshoot -- curl testingdns:80
+
+#) “Using the netshoot Pod created in the previous exercise, locate the Service in the default namespace by its DNS name. Use as few letters as possible for DNS search functionality.”
+
+k exec -it netshoot -- curl -I testingdns:80
+
+#) “Create a Deployment named hello using the image nginxdemos/hello:plain-text with the kubectl command line. Expose the Deployment to create a ClusterIP Service named hello-svc that can communicate over port 80 using the kubectl command line. Use the correct kubectl command to verify that it’s a ClusterIP Service with the correct port exposed.
+
+k create deploy hello --image=nginxdemos/hello:plain-text
+k expose deploy hello --name=hello-svc --port=80 --target-port=80 --type=ClusterIP
+k get svc
+
+#) Change the hello-svc Service created in the previous exercise to a NodePort Service, where the NodePort should be 30000. Be sure to edit the Service in place, without creating a new YAML or issuing a new imperative command. Communicate with the Pods within the hello Deployment via the NodePort Service using curl.
+
+k edit svc hello-svc # change the type to nodeport and try to add nodePort below target port and point to 30000
+k get nodes -o wide # get the ip of your node on which it is hosted and do a curl - you will be able to view the site
+curl localhost:30000 # on your node server to view this
+
+#) Install an Ingress controller in the cluster using the command k apply -f https:// raw.githubusercontent.com/chadmcrowell/acing-the-cka-exam/main/ch_06/ nginx-ingress-controller.yaml. Change the hello-svc Service back to a ClusterIP” “Service and create an Ingress resource that will route to the hello-svc Service when a client requests hello.com.
+
+k apply -f https:// raw.githubusercontent.com/chadmcrowell/acing-the-cka-exam/main/ch_06/ nginx-ingress-controller.yaml
+k edit svc hello-svc # change it back to ClusterIP and remove nodeport
+kubectl create ingress hello-ingress --rule="hello.com*=hello-svc:80" --dry-run=client -o yaml
+
+
+#) Create a new kind cluster without a CNI. Install the bridge CNI, followed by the Calico CNI. After installing the CNI, verify that the CoreDNS Pods are up and running and the nodes are in a ready state.”
+
+### NEEDS WORK
+
+#) 
+
+
+**** HELM
+**** kustomize
+**** CNI
+**** mock 1,2,3
+**** mock from killerkoda
+
+
+
+
+
+
+
+
+Solution manifest file to create a CSR as follows:
+
+---
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: john-developer
+spec:
+  signerName: kubernetes.io/kube-apiserver-client
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZEQ0NBVHdDQVFBd0R6RU5NQXNHQTFVRUF3d0VhbTlvYmpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRApnZ0VQQURDQ0FRb0NnZ0VCQUt2Um1tQ0h2ZjBrTHNldlF3aWVKSzcrVVdRck04ZGtkdzkyYUJTdG1uUVNhMGFPCjV3c3cwbVZyNkNjcEJFRmVreHk5NUVydkgyTHhqQTNiSHVsTVVub2ZkUU9rbjYra1NNY2o3TzdWYlBld2k2OEIKa3JoM2prRFNuZGFvV1NPWXBKOFg1WUZ5c2ZvNUpxby82YU92czFGcEc3bm5SMG1JYWpySTlNVVFEdTVncGw4bgpjakY0TG4vQ3NEb3o3QXNadEgwcVpwc0dXYVpURTBKOWNrQmswZWhiV2tMeDJUK3pEYzlmaDVIMjZsSE4zbHM4CktiSlRuSnY3WDFsNndCeTN5WUFUSXRNclpUR28wZ2c1QS9uREZ4SXdHcXNlMTdLZDRaa1k3RDJIZ3R4UytkMEMKMTNBeHNVdzQyWVZ6ZzhkYXJzVGRMZzcxQ2NaanRxdS9YSmlyQmxVQ0F3RUFBYUFBTUEwR0NTcUdTSWIzRFFFQgpDd1VBQTRJQkFRQ1VKTnNMelBKczB2czlGTTVpUzJ0akMyaVYvdXptcmwxTGNUTStsbXpSODNsS09uL0NoMTZlClNLNHplRlFtbGF0c0hCOGZBU2ZhQnRaOUJ2UnVlMUZnbHk1b2VuTk5LaW9FMnc3TUx1a0oyODBWRWFxUjN2SSsKNzRiNnduNkhYclJsYVhaM25VMTFQVTlsT3RBSGxQeDNYVWpCVk5QaGhlUlBmR3p3TTRselZuQW5mNm96bEtxSgpvT3RORStlZ2FYWDdvc3BvZmdWZWVqc25Yd0RjZ05pSFFTbDgzSkljUCtjOVBHMDJtNyt0NmpJU3VoRllTVjZtCmlqblNucHBKZWhFUGxPMkFNcmJzU0VpaFB1N294Wm9iZDFtdWF4bWtVa0NoSzZLeGV0RjVEdWhRMi80NEMvSDIKOWk1bnpMMlRST3RndGRJZjAveUF5N05COHlOY3FPR0QKLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+  usages:
+  - digital signature
+  - key encipherment
+  - client auth
+
+To approve this certificate, run: kubectl certificate approve john-developer
+
+Next, create a role developer and rolebinding developer-role-binding, run the command:
+
+$ kubectl create role developer --resource=pods --verb=create,list,get,update,delete --namespace=development
+
+$ kubectl create rolebinding developer-role-binding --role=developer --user=john --namespace=development
+
+To verify the permission from kubectl utility tool:
+
+$ kubectl auth can-i update pods --as=john --namespace=development
+
+
+
+Use the command kubectl run and create a nginx pod and busybox pod. Resolve it, nginx service and its pod name from busybox pod.
+
+To create a pod nginx-resolver and expose it internally:
+
+kubectl run nginx-resolver --image=nginx
+kubectl expose pod nginx-resolver --name=nginx-resolver-service --port=80 --target-port=80 --type=ClusterIP
+
+To create a pod test-nslookup. Test that you are able to look up the service and pod names from within the cluster:
+
+kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup nginx-resolver-service
+kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup nginx-resolver-service > /root/CKA/nginx.svc
+
+Get the IP of the nginx-resolver pod and replace the dots(.) with hyphon(-) which will be used below.
+
+kubectl get pod nginx-resolver -o wide
+kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup <P-O-D-I-P.default.pod> > /root/CKA/nginx.pod
+
+
+To create a static pod called nginx-critical by using below command:
+
+kubectl run nginx-critical --image=nginx --dry-run=client -o yaml > static.yaml
+
+Copy the contents of this file or use scp command to transfer this file from controlplane to node01 node.
+
+root@controlplane:~# scp static.yaml node01:/root/
+
+To know the IP Address of the node01 node:
+
+root@controlplane:~# kubectl get nodes -o wide
+
+# Perform SSH
+root@controlplane:~# ssh node01
+OR
+root@controlplane:~# ssh <IP of node01>
+
+On node01 node:
+
+Check if static pod directory is present which is /etc/kubernetes/manifests, if it's not present then create it.
+
+root@node01:~# mkdir -p /etc/kubernetes/manifests
+
+Add that complete path to the staticPodPath field in the kubelet config.yaml file.
+
+root@node01:~# vi /var/lib/kubelet/config.yaml
+
+now, move/copy the static.yaml to path /etc/kubernetes/manifests/.
+
+root@node01:~# cp /root/static.yaml /etc/kubernetes/manifests/
+
+Go back to the controlplane node and check the status of static pod:
+
+root@node01:~# exit
+logout
+root@controlplane:~# kubectl get pods 
+
+
+Under /root/ folder you will find a yaml file backend-hpa.yaml. Update the yaml file as per task given.
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  minReplicas: 3
+  maxReplicas: 15
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 65
+
+Use below command
+
+kubectl create -f webapp-hpa.yaml
+
+
+
+Use the below YAML file to create the VPA for deployment multi-container-deployment
+
+kubectl create -n default -f - <<EOF
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: multi-container-vpa
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: multi-container-deployment
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: backend-app
+      mode: Auto
+    - containerName: frontend-app
+      mode: "Off"
+EOF
+
+
+Copy the below YAML file to the terminal and create a gateway resource.
+
+kubectl create -n default -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: web-gateway
+      namespace: nginx-gateway
+  rules:
+    - backendRefs:
+        - name: web-service
+          port: 80
+EOF
+
+
