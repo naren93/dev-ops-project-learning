@@ -1,0 +1,84 @@
+[
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Network/publicIPAddresses/pip-attached-vm",
+    "name": "pip-attached-vm",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "eastus",
+    "properties": {
+      "ipAddress": "20.10.1.5",
+      "ipConfiguration": {
+        "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Network/networkInterfaces/nic-app-01/ipConfigurations/ipconfig1"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Network/publicIPAddresses/pip-attached-natgw",
+    "name": "pip-attached-natgw",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "eastus",
+    "properties": {
+      "ipAddress": "20.10.1.9",
+      "natGateway": {
+        "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Network/natGateways/nat-gw-prod"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-dev/providers/Microsoft.Network/publicIPAddresses/pip-orphaned-1",
+    "name": "pip-orphaned-1",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "westus2",
+    "properties": {
+      "ipAddress": "52.183.42.11",
+      "ipConfiguration": null
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-staging/providers/Microsoft.Network/publicIPAddresses/pip-orphaned-2",
+    "name": "pip-orphaned-2",
+    "type": "Microsoft.Network/publicIPAddresses",
+    "location": "centralus",
+    "properties": {
+      "ipAddress": "13.84.150.88"
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Compute/disks/disk-os-attached",
+    "name": "disk-os-attached",
+    "type": "Microsoft.Compute/disks",
+    "location": "eastus",
+    "properties": {
+      "diskSizeGB": 128,
+      "diskState": "Attached",
+      "managedBy": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Compute/virtualMachines/vm-prod-01"
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-dev/providers/Microsoft.Compute/disks/disk-unattached-unattachedstate",
+    "name": "disk-unattached-unattachedstate",
+    "type": "Microsoft.Compute/disks",
+    "location": "westus2",
+    "properties": {
+      "diskSizeGB": 256,
+      "diskState": "Unattached",
+      "managedBy": null
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-staging/providers/Microsoft.Compute/disks/disk-unattached-reserved",
+    "name": "disk-unattached-reserved",
+    "type": "Microsoft.Compute/disks",
+    "location": "centralus",
+    "properties": {
+      "diskSizeGB": 512,
+      "diskState": "Reserved"
+    }
+  },
+  {
+    "id": "/subscriptions/sub-123/resourceGroups/rg-prod/providers/Microsoft.Compute/virtualMachines/vm-prod-01",
+    "name": "vm-prod-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "location": "eastus",
+    "properties": {}
+  }
+]

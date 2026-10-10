@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Azure Resource Inventory & Utilization: ***-SUBSCRIPTION-***</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #24292e; margin: 0; padding: 24px; }
+  .container { max-width: 1200px; margin: auto; }
+  .header { background: #0078d4; color: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .header h1 { margin: 0 0 8px 0; font-size: 24px; }
+  .header p { margin: 4px 0; font-size: 14px; opacity: 0.9; }
+  .card { background: white; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+  .card-header { padding: 16px 20px; background: #fafbfc; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; }
+  .card-header h3 { margin: 0; font-size: 16px; color: #1f2328; }
+  .pill { background: #e1e4e8; color: #444; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .card-body { padding: 20px; }
+  .styled-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+  .styled-table th { background-color: #f6f8fa; color: #24292e; padding: 10px 12px; border-bottom: 2px solid #e1e4e8; font-weight: 600; }
+  .styled-table td { padding: 10px 12px; border-bottom: 1px solid #eaecef; }
+  .styled-table tr:hover { background-color: #f9fbfd; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .badge-success { background: #d4edda; color: #155724; }
+  .badge-active { background: #cce5ff; color: #004085; }
+  code { font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #f0f3f6; padding: 2px 5px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Azure Resource Hierarchy & Utilization Audit Log</h1>
+    <p><strong>Subscription:</strong> ***-SUBSCRIPTION-*** (<code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>)</p>
+    <p><strong>Generated:</strong> 2026-10-10 23:45:12 &bull; <strong>Resource Groups:</strong> 8 &bull; <strong>Total Active Resources:</strong> 14</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>💰 Azure Budgets & Cost Tracking</h3>
+    </div>
+    <div class="card-body">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Budget Name</th>
+            <th>Limit</th>
+            <th>Current Spend</th>
+            <th>% Consumed</th>
+            <th>Time Grain</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td><strong>budget-contractsai</strong></td>
+              <td>3,000.00 INR</td>
+              <td>0.00 INR</td>
+              <td><span class="badge badge-success">0.0%</span></td>
+              <td>BillingMonth</td>
+              <td>Cost</td>
+            </tr>
+            
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>🏢 Resource Hierarchy & Utilization Matrix</h2>
+  
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>112</code></h3>
+            <span class="pill">eastus &bull; 7 resources</span>
+          </div>
+          <div class="card-body">
+            
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Resource Name</th>
+                  <th>Resource Type</th>
+                  <th>Region</th>
+                  <th>Utilization Status</th>
+                  <th>Utilization Metrics</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+                <tr>
+                  <td>01</td>
+                  <td><strong>demopocsppech</strong></td>
+                  <td><code>CognitiveServices/accounts</code></td>
+                  <td>eastus</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>02</td>
+                  <td><strong>aipocmi-resource-logs</strong></td>
+                  <td><code>OperationalInsights/workspaces</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>03</td>
+                  <td><strong>aipocmi-resource</strong></td>
+                  <td><code>CognitiveServices/accounts</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>04</td>
+                  <td><strong>aipocmi-resource-appinsights</strong></td>
+                  <td><code>Insights/components</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>05</td>
+                  <td><strong>aipocmi-resource/aipocmi</strong></td>
+                  <td><code>CognitiveServices/accounts/projects</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>06</td>
+                  <td><strong>Application Insights Smart Detection</strong></td>
+                  <td><code>insights/actiongroups</code></td>
+                  <td>global</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>07</td>
+                  <td><strong>Failure Anomalies - aipocmi-resource-appinsights</strong></td>
+                  <td><code>alertsmanagement/smartDetectorAlertRules</code></td>
+                  <td>global</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                </tbody></table>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>rg-frontdoor-demo</code></h3>
+            <span class="pill">eastus &bull; 0 resources</span>
+          </div>
+          <div class="card-body">
+            <p style='color:#777; font-style:italic;'>Empty resource group (No resources deployed).</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>fabric-rg</code></h3>
+            <span class="pill">centralindia &bull; 5 resources</span>
+          </div>
+          <div class="card-body">
+            
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Resource Name</th>
+                  <th>Resource Type</th>
+                  <th>Region</th>
+                  <th>Utilization Status</th>
+                  <th>Utilization Metrics</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+                <tr>
+                  <td>01</td>
+                  <td><strong>vault-m7vubgbf</strong></td>
+                  <td><code>RecoveryServices/vaults</code></td>
+                  <td>centralindia</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>02</td>
+                  <td><strong>aichatbot-demo</strong></td>
+                  <td><code>Search/searchServices</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>03</td>
+                  <td><strong>aidemopoc</strong></td>
+                  <td><code>Sql/servers</code></td>
+                  <td>australiaeast</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>04</td>
+                  <td><strong>aidemopoc/master</strong></td>
+                  <td><code>Sql/servers/databases</code></td>
+                  <td>australiaeast</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                
+                <tr>
+                  <td>05</td>
+                  <td><strong>aidemopoc/configdemo</strong></td>
+                  <td><code>Sql/servers/databases</code></td>
+                  <td>australiaeast</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                </tbody></table>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>NetworkWatcherRG</code></h3>
+            <span class="pill">centralindia &bull; 1 resources</span>
+          </div>
+          <div class="card-body">
+            
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Resource Name</th>
+                  <th>Resource Type</th>
+                  <th>Region</th>
+                  <th>Utilization Status</th>
+                  <th>Utilization Metrics</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+                <tr>
+                  <td>01</td>
+                  <td><strong>NetworkWatcher_eastus</strong></td>
+                  <td><code>Network/networkWatchers</code></td>
+                  <td>eastus</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                </tbody></table>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>ha-webapp-demo-rg</code></h3>
+            <span class="pill">eastus2 &bull; 0 resources</span>
+          </div>
+          <div class="card-body">
+            <p style='color:#777; font-style:italic;'>Empty resource group (No resources deployed).</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>DefaultResourceGroup-EUS2</code></h3>
+            <span class="pill">eastus2 &bull; 0 resources</span>
+          </div>
+          <div class="card-body">
+            <p style='color:#777; font-style:italic;'>Empty resource group (No resources deployed).</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>demowebapp123_group</code></h3>
+            <span class="pill">eastus2 &bull; 0 resources</span>
+          </div>
+          <div class="card-body">
+            <p style='color:#777; font-style:italic;'>Empty resource group (No resources deployed).</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3>📁 Resource Group: <code>rg-ram-aks</code></h3>
+            <span class="pill">eastus2 &bull; 1 resources</span>
+          </div>
+          <div class="card-body">
+            
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Resource Name</th>
+                  <th>Resource Type</th>
+                  <th>Region</th>
+                  <th>Utilization Status</th>
+                  <th>Utilization Metrics</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+                <tr>
+                  <td>01</td>
+                  <td><strong>ramacrdotnet</strong></td>
+                  <td><code>ContainerRegistry/registries</code></td>
+                  <td>eastus2</td>
+                  <td><span class="badge badge-active">Active</span></td>
+                  <td>N/A</td>
+                </tr>
+                </tbody></table>
+          </div>
+        </div>
+        
+
+</div>
+</body>
+</html>

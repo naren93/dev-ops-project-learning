@@ -1,0 +1,5 @@
+# Azure Resource Inspector - Gitignore
+# Keep code and fixture committed; ignore ad-hoc JSON exports or local environment files
+*.pyc
+__pycache__/
+.env
