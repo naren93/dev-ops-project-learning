@@ -1,11 +1,11 @@
 FROM registry.access.redhat.com/ubi9/dotnet-100:9.8-1790211954
-WORKDIR /src
+WORKDIR /opt/app-root/src
 
-COPY ["HelloWorldApi.csproj", "."]
-COPY . .
-RUN dotnet publish -c Release -o /src/publish
+COPY --chown=1001:0 ["HelloWorldApi.csproj", "."]
+COPY --chown=1001:0 . .
+RUN dotnet publish -c Release -o /opt/app-root/publish
 
-WORKDIR /src/publish
+WORKDIR /opt/app-root/publish
 
 ENV ASPNETCORE_URLS=http://+:8081
 EXPOSE 8081

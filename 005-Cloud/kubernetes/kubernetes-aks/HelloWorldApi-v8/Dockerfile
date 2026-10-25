@@ -1,11 +1,11 @@
 FROM registry.access.redhat.com/ubi8/dotnet-80:8.0
-WORKDIR /src
+WORKDIR /opt/app-root/src
 
-COPY ["HelloWorldApi.csproj", "."]
-COPY . .
-RUN dotnet publish -c Release -o /src/publish
+COPY --chown=1001:0 ["HelloWorldApi.csproj", "."]
+COPY --chown=1001:0 . .
+RUN dotnet publish -c Release -o /opt/app-root/publish
 
-WORKDIR /src/publish
+WORKDIR /opt/app-root/publish
 
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
